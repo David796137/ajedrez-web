@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mi primer ajedrez</title>
+  <style>
+    table { border-collapse: collapse; margin: 20px auto; }
+    td {
+      width: 60px; height: 60px; text-align: center; font-size: 32px;
+      border: 1px solid #444;
+      background: #f0d9b5;
+    }
+    .black { background: #b58863; }
+    #info { text-align: center; font-family: sans-serif; }
+  </style>
+</head>
+<body>
+<div id="info">Haz click en una pieza y luego en su destino.</div>
+<table id="chessboard"></table>
+<script>
+const initialBoard = [
+  ["♜","♞","♝","♛","♚","♝","♞","♜"],
+  ["♟","♟","♟","♟","♟","♟","♟","♟"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["♙","♙","♙","♙","♙","♙","♙","♙"],
+  ["♖","♘","♗","♕","♔","♗","♘","♖"]
+];
+let board = JSON.parse(JSON.stringify(initialBoard));
+let selected = null;
+const table = document.getElementById('chessboard');
+function drawBoard() {
+  table.innerHTML = '';
+  for (let y = 0; y < 8; y++) {
+    const row = table.insertRow();
+    for (let x = 0; x < 8; x++) {
+      const cell = row.insertCell();
+      cell.textContent = board[y][x];
+      cell.className = ((x + y) % 2 === 1) ? "black" : "";
+      cell.onclick = () => cellClick(x, y);
+      if (selected && selected[0] === x && selected[1] === y) {
+        cell.style.background = "#ff0";
+      }
+    }
+  }
+}
+function cellClick(x, y) {
+  if (selected) {
+    board[y][x] = board[selected[1]][selected[0]];
+    board[selected[1]][selected[0]] = "";
+    selected = null;
+    drawBoard();
+  } else if (board[y][x] !== "") {
+    selected = [x, y];
+    drawBoard();
+  }
+}
+drawBoard();
+</script>
+</body>
+</html>
